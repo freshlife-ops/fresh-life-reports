@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fresh Life October 2026 Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: Fresh Life blue header band, sticky slicer bar, KPI groups, chart grid, comparison table. Palette: Fresh Life blue on cool paper, amber second series. */
+:root{
+  --bg:#f3f6f9; --panel:#ffffff; --fg:#14222d; --muted:#5a6b78; --line:#d9e2ea;
+  --brand:#08679f; --on-brand:#ffffff; --brand-soft:#cfe3f0;
+  --accent:#08679f; --accent2:#e0901f; --track:#e6edf3;
+  --ok:#1d7a4c; --bad:#b4442f; --warn:#a86a0c;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#0f161c;--panel:#16212a;--fg:#e6edf2;--muted:#97a8b5;--line:#26343f;--brand:#08679f;--on-brand:#ffffff;--brand-soft:#cfe3f0;--accent:#4aa3d8;--accent2:#e8a443;--track:#22303b;--ok:#5cc48d;--bad:#ef7b63;--warn:#e2a93f;color-scheme:dark}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:78rem;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+.band{background:var(--brand);color:var(--on-brand);border-radius:12px;padding:24px 26px}
+.band .sub,.band .take{color:var(--on-brand);opacity:.88}
+.eyebrow{margin:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--brand-soft);font-weight:600}
+h1{margin:4px 0 0;font-family:var(--display);font-weight:400;font-size:clamp(28px,4vw,40px);line-height:1.1;text-wrap:balance}
+.sub{margin:6px 0 0;color:var(--muted)}
+.take{margin:10px 0 0;max-width:64ch}
+.slicer{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.slicer .lab{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:14px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.chip:hover{border-color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip.quick{border-style:dashed}
+.sel{font-size:13px;color:var(--muted)}
+h2{margin:0 0 10px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,13.5rem),1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.tile .l{font-size:13px;color:var(--muted)}
+.tile .v{font-family:var(--display);font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile .v small{font-family:var(--body);font-size:15px;color:var(--muted)}
+.tile .c{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tile .c.good{color:var(--ok)} .tile .c.bad{color:var(--bad)}
+.tile .n{font-size:12.5px;color:var(--muted)}
+.tile .split{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tile .split b{color:var(--fg);font-weight:600}
+.meter{height:6px;border-radius:3px;background:var(--track);overflow:hidden;margin-top:4px}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.grid{display:grid;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.card h3{margin:0;font-size:16px;font-weight:600}
+.card p.note{margin:0;font-size:12.5px;color:var(--muted)}
+.chart{position:relative;margin-top:8px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--body);font-size:12px;fill:var(--muted)}
+.chart text.fg{fill:var(--fg)}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.empty{font-size:13px;color:var(--muted);padding:18px 0}
+.tt{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.12);padding:6px 10px;font-size:12.5px;white-space:nowrap;z-index:3}
+.tt .k{color:var(--muted)}
+.tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
+th,td{padding:10px 14px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{font-size:12px;color:var(--muted);font-weight:600}
+th:first-child,td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:0}
+td.bad{color:var(--bad)}
+.foot{font-size:12.5px;color:var(--muted);margin:0}
+[hidden]{display:none!important}
+@media (max-width:520px){.tile .v{font-size:24px}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tile{padding:12px}}
+.trendhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.metricpick{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.metricpick select{font:inherit;font-size:14px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:12rem}
+.metricpick select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.multiples{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:14px;margin-top:10px}
+.mult{border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
+.mult .mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.mult .mh b{font-weight:600}
+.mult .mh span{font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.sectnote{margin:-4px 0 10px!important}
+.card h3.sub3{margin-top:14px}
+.card h3.good{color:var(--ok)}
+.card h3.warn{color:var(--warn)}
+.card ul{margin:4px 0 0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px;line-height:1.45}
+.chart .mark{fill:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="band">
+  <p class="eyebrow">Fresh Life · End of month</p>
+  <h1>October 2026 operations</h1>
+  <p class="sub">Oct 1–31, 2026 · changes compare October with September</p>
+  <p class="take">October reversed September's growth. The network shrank slightly, new connections slowed sharply everywhere except Lusaka, and closures put real pressure on the active network.</p>
+</header>
+
+<div class="slicer" role="group" aria-label="Region filter">
+  <span class="lab">Region</span>
+  <div class="chips" id="cityChips"></div>
+  <div class="chips">
+    <button type="button" class="chip quick" data-quick="all">All</button>
+    <button type="button" class="chip quick" data-quick="new">New cities</button>
+  </div>
+  <span class="sel" id="selText"></span>
+</div>
+
+<section>
+  <h2>Growth</h2>
+  <div class="tiles" id="tGrowth"></div>
+</section>
+<section>
+  <h2>Network</h2>
+  <div class="tiles" id="tNetwork"></div>
+</section>
+<section>
+  <h2>Retention, collections and service</h2>
+  <div class="tiles" id="tService"></div>
+</section>
+
+<section class="card" id="trend">
+  <div class="trendhead">
+    <div>
+      <h3>Monthly trend, January to October 2026</h3>
+      <p class="note">One chart per selected region, each on its own scale. October is marked.</p>
+    </div>
+    <label class="metricpick"><span>Metric</span>
+      <select id="metric" aria-label="Trend metric">
+        <option value="active_network">Active network</option>
+        <option value="deposits">Deposits received</option>
+        <option value="launches">Toilets launched</option>
+        <option value="closures">Closures</option>
+        <option value="reopenings">Reopenings</option>
+        <option value="net_reopening">Net reopening</option>
+        <option value="retention">Retention rate</option>
+        <option value="invoice">Invoice collection</option>
+        <option value="portfolio">Portfolio collected</option>
+        <option value="case_sla">Case resolution SLA</option>
+      </select>
+    </label>
+  </div>
+  <div class="multiples" id="multiples"></div>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <h3>Active network vs target</h3>
+    <p class="note">Toilets in the active network at the end of October. The tick marks each region's target.</p>
+    <div class="chart" id="cNetwork"></div>
+  </div>
+  <div class="card">
+    <h3>Monthly flow, September vs October</h3>
+    <p class="note">Totals for the selected regions.</p>
+    <div class="legend"><span><i style="background:var(--brand-soft)"></i>September</span><span><i style="background:var(--accent)"></i>October</span></div>
+    <div class="chart" id="cFlow"></div>
+  </div>
+  <div class="card">
+    <h3>Closures by reason</h3>
+    <p class="note">October, selected regions. School holiday closures are excluded. Lusaka had no closures.</p>
+    <div class="chart" id="cReasons"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Cases and customer support</h2>
+  <p class="note sectnote" id="caseNote"></p>
+  <div class="tiles" id="tCases"></div>
+</section>
+<section class="grid" id="caseGrid">
+  <div class="card">
+    <h3>Cases by category</h3>
+    <p class="note">October cases for the selected regions, with the share resolved within SLA.</p>
+    <div class="legend" id="catLegend"><span><i style="background:var(--brand-soft)"></i>September</span><span><i style="background:var(--accent)"></i>October</span></div>
+    <div class="chart" id="cCat"></div>
+  </div>
+  <div class="card">
+    <h3>Weekly case volume</h3>
+    <p class="note">October cases by due-date week, for the selected regions.</p>
+    <div class="legend" id="wkLegend"><span><i style="background:var(--brand-soft)"></i>September</span><span><i style="background:var(--accent)"></i>October</span></div>
+    <div class="chart" id="cWeekly"></div>
+  </div>
+  <div class="card">
+    <h3>SLA by location</h3>
+    <p class="note">Share of October cases resolved within SLA.</p>
+    <div class="chart" id="cLoc"></div>
+    <h3 class="sub3">Top issues</h3>
+    <div class="chart" id="cIssues"></div>
+  </div>
+</section>
+
+<section>
+  <h2 id="hlTitle">Highlights</h2>
+  <div class="grid">
+    <div class="card"><h3 class="good">What went well</h3><ul id="hlWell"></ul></div>
+    <div class="card"><h3 class="warn">Needs attention</h3><ul id="hlAttn"></ul></div>
+    <div class="card"><h3>Focus for November</h3><ul id="hlFocus"></ul></div>
+  </div>
+</section>
+
+<section>
+  <h2>Selected regions side by side, October</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Region</th><th>Active network</th><th>Target</th><th>% of target</th><th>Deposits</th><th>Launches</th><th>Reopenings</th><th>Closures</th><th>Permanent</th><th>Net reopening</th><th>Retention</th><th>Invoice</th><th>Portfolio</th><th>Case SLA</th></tr></thead>
+    <tbody id="tbl"></tbody>
+  </table></div>
+</section>
+
+<p class="foot">Source: Operations Summary data workbook (2026 monthly breakdowns per city), the Cases tab of the All Cities Daily Operations Performance workbook (1 Nov 2026) and the October 2026 End-of-Month Report. Closures are worked out as network start + launches + reopenings − network end, so they match the closure-reason charts.</p>
+</div>
+<script>
+const D = {"monthly":[{"city":"Nairobi","month":"Jan","month_index":1,"active_network":6719,"deposits":165.0,"launches":123.0,"reopenings":4,"closures":240,"perm_closures":35,"net_reopening":-236,"net_growth":-113,"retention":0.9654566745,"case_sla":0.91,"case_resolution":1.0,"invoice":0.76,"portfolio":0.7533},{"city":"Nairobi","month":"Feb","month_index":2,"active_network":6793,"deposits":131,"launches":120.0,"reopenings":27,"closures":73,"perm_closures":19,"net_reopening":-46,"net_growth":74,"retention":0.9588700234,"case_sla":0.6,"case_resolution":0.91,"invoice":0.86,"portfolio":0.86},{"city":"Nairobi","month":"Mar","month_index":3,"active_network":6879.0,"deposits":126,"launches":121.0,"reopenings":29,"closures":65,"perm_closures":9,"net_reopening":-36,"net_growth":85.0,"retention":0.9536007026,"case_sla":0.44,"case_resolution":0.78,"invoice":0.85,"portfolio":0.85},{"city":"Nairobi","month":"Apr","month_index":4,"active_network":6903,"deposits":126,"launches":120.0,"reopenings":13.0,"closures":109,"perm_closures":0.0,"net_reopening":-96.0,"net_growth":24,"retention":0.9395491803,"case_sla":0.49,"case_resolution":0.81,"invoice":0.89,"portfolio":0.92},{"city":"Nairobi","month":"May","month_index":5,"active_network":6992.0,"deposits":113.0,"launches":122.0,"reopenings":32.0,"closures":65,"perm_closures":15.0,"net_reopening":-33.0,"net_growth":89.0,"retention":0.9347189696,"case_sla":0.38,"case_resolution":0.68,"invoice":0.89,"portfolio":0.88},{"city":"Nairobi","month":"Jun","month_index":6,"active_network":6889.0,"deposits":108.0,"launches":63.0,"reopenings":16.0,"closures":182,"perm_closures":67.0,"net_reopening":-166.0,"net_growth":-103.0,"retention":0.9104215457,"case_sla":0.44,"case_resolution":0.7,"invoice":0.91,"portfolio":0.99},{"city":"Nairobi","month":"Jul","month_index":7,"active_network":7092.0,"deposits":174.0,"launches":205.0,"reopenings":28.0,"closures":30,"perm_closures":11.0,"net_reopening":-2.0,"net_growth":203.0,"retention":0.9101288056,"case_sla":0.38,"case_resolution":0.67,"invoice":0.95,"portfolio":0.99},{"city":"Nairobi","month":"Aug","month_index":8,"active_network":7162,"deposits":129.0,"launches":100.0,"reopenings":30.0,"closures":60,"perm_closures":1.0,"net_reopening":-30.0,"net_growth":70,"retention":0.9057377049,"case_sla":0.41,"case_resolution":0.78,"invoice":0.94,"portfolio":0.96},{"city":"Nairobi","month":"Sep","month_index":9,"active_network":7183.0,"deposits":103.0,"launches":100.0,"reopenings":17.0,"closures":96,"perm_closures":10.0,"net_reopening":-79.0,"net_growth":21.0,"retention":0.8941744731,"case_sla":0.41,"case_resolution":0.78,"invoice":0.95,"portfolio":0.96},{"city":"Nairobi","month":"Oct","month_index":10,"active_network":7150,"deposits":62.0,"launches":23.0,"reopenings":24.0,"closures":80,"perm_closures":73.0,"net_reopening":-56.0,"net_growth":-33,"retention":0.9402810304,"case_sla":0.41,"case_resolution":0.69,"invoice":0.92,"portfolio":0.91},{"city":"Kisumu","month":"Jan","month_index":1,"active_network":1451.0,"deposits":23.0,"launches":24.0,"reopenings":5,"closures":18,"perm_closures":0.0,"net_reopening":-13,"net_growth":11.0,"retention":0.9909722222,"case_sla":0.96,"case_resolution":0.97,"invoice":0.8315,"portfolio":0.8245},{"city":"Kisumu","month":"Feb","month_index":2,"active_network":1459.0,"deposits":13.0,"launches":13.0,"reopenings":6.0,"closures":11,"perm_closures":0.0,"net_reopening":-5.0,"net_growth":8.0,"retention":0.9875,"case_sla":0.96,"case_resolution":1.0,"invoice":0.87,"portfolio":0.8059},{"city":"Kisumu","month":"Mar","month_index":3,"active_network":1467.0,"deposits":18.0,"launches":19.0,"reopenings":10.0,"closures":21,"perm_closures":0.0,"net_reopening":-11.0,"net_growth":8.0,"retention":0.9798611111,"case_sla":0.73,"case_resolution":0.79,"invoice":0.88,"portfolio":0.8382},{"city":"Kisumu","month":"Apr","month_index":4,"active_network":1442.0,"deposits":8.0,"launches":7.0,"reopenings":4.0,"closures":36,"perm_closures":0.0,"net_reopening":-32.0,"net_growth":-25.0,"retention":0.9576388889,"case_sla":0.97,"case_resolution":0.98,"invoice":0.88,"portfolio":0.848},{"city":"Kisumu","month":"May","month_index":5,"active_network":1472.0,"deposits":25.0,"launches":24.0,"reopenings":16,"closures":10,"perm_closures":18.0,"net_reopening":6,"net_growth":30.0,"retention":0.9618055556,"case_sla":0.97,"case_resolution":0.99,"invoice":0.91,"portfolio":0.84},{"city":"Kisumu","month":"Jun","month_index":6,"active_network":1504.0,"deposits":27.0,"launches":26.0,"reopenings":10.0,"closures":4,"perm_closures":0.0,"net_reopening":6.0,"net_growth":32.0,"retention":0.9659722222,"case_sla":0.96,"case_resolution":1.0,"invoice":0.89,"portfolio":0.779},{"city":"Kisumu","month":"Jul","month_index":7,"active_network":1528.0,"deposits":23.0,"launches":24.0,"reopenings":17.0,"closures":17,"perm_closures":0.0,"net_reopening":0.0,"net_growth":24.0,"retention":0.9659722222,"case_sla":0.93,"case_resolution":0.95,"invoice":0.92,"portfolio":0.79},{"city":"Kisumu","month":"Aug","month_index":8,"active_network":1505.0,"deposits":29.0,"launches":24.0,"reopenings":2.0,"closures":49,"perm_closures":0.0,"net_reopening":-47.0,"net_growth":-23.0,"retention":0.9333333333,"case_sla":0.86,"case_resolution":0.96,"invoice":0.8984,"portfolio":0.8576},{"city":"Kisumu","month":"Sep","month_index":9,"active_network":1513.0,"deposits":2.0,"launches":2.0,"reopenings":20.0,"closures":14,"perm_closures":0.0,"net_reopening":6.0,"net_growth":8.0,"retention":0.9375,"case_sla":0.89,"case_resolution":0.96,"invoice":0.9129,"portfolio":0.8025},{"city":"Kisumu","month":"Oct","month_index":10,"active_network":1501.0,"deposits":0.0,"launches":4.0,"reopenings":8.0,"closures":24,"perm_closures":1.0,"net_reopening":-16.0,"net_growth":-12.0,"retention":0.9263888889,"case_sla":0.95,"case_resolution":0.98,"invoice":0.8781,"portfolio":0.8377},{"city":"Eldoret","month":"Jan","month_index":1,"active_network":693.0,"deposits":14.0,"launches":19.0,"reopenings":3.0,"closures":19,"perm_closures":0.0,"net_reopening":-16.0,"net_growth":3.0,"retention":0.9768115942,"case_sla":0.9,"case_resolution":0.9,"invoice":null,"portfolio":null},{"city":"Eldoret","month":"Feb","month_index":2,"active_network":713.0,"deposits":18.0,"launches":19.0,"reopenings":10.0,"closures":9,"perm_closures":7.0,"net_reopening":1.0,"net_growth":20.0,"retention":0.9782608696,"case_sla":0.88,"case_resolution":0.97,"invoice":0.78,"portfolio":0.78},{"city":"Eldoret","month":"Mar","month_index":3,"active_network":728.0,"deposits":29.0,"launches":21.0,"reopenings":2.0,"closures":8,"perm_closures":1.0,"net_reopening":-6.0,"net_growth":15.0,"retention":0.9695652174,"case_sla":0.68,"case_resolution":1.0,"invoice":0.81,"portfolio":0.86},{"city":"Eldoret","month":"Apr","month_index":4,"active_network":741.0,"deposits":17.0,"launches":20.0,"reopenings":2.0,"closures":9,"perm_closures":0.0,"net_reopening":-7.0,"net_growth":13.0,"retention":0.9594202899,"case_sla":1.0,"case_resolution":1.0,"invoice":0.84,"portfolio":0.91},{"city":"Eldoret","month":"May","month_index":5,"active_network":756.0,"deposits":17.0,"launches":18.0,"reopenings":7.0,"closures":10,"perm_closures":0.0,"net_reopening":-3.0,"net_growth":15.0,"retention":0.9550724638,"case_sla":0.9,"case_resolution":1.0,"invoice":0.86,"portfolio":0.91},{"city":"Eldoret","month":"Jun","month_index":6,"active_network":766.0,"deposits":17.0,"launches":18.0,"reopenings":1.0,"closures":9,"perm_closures":0.0,"net_reopening":-8.0,"net_growth":10.0,"retention":0.9434782609,"case_sla":1.0,"case_resolution":1.0,"invoice":0.82,"portfolio":0.86},{"city":"Eldoret","month":"Jul","month_index":7,"active_network":730.0,"deposits":15.0,"launches":16.0,"reopenings":2.0,"closures":54,"perm_closures":4.0,"net_reopening":-52.0,"net_growth":-36.0,"retention":0.868115942,"case_sla":0.93,"case_resolution":0.93,"invoice":0.77,"portfolio":0.84},{"city":"Eldoret","month":"Aug","month_index":8,"active_network":727.0,"deposits":15.0,"launches":12.0,"reopenings":6.0,"closures":21,"perm_closures":0.0,"net_reopening":-15.0,"net_growth":-3.0,"retention":0.8463768116,"case_sla":0.94,"case_resolution":1.0,"invoice":0.92,"portfolio":0.86},{"city":"Eldoret","month":"Sep","month_index":9,"active_network":731.0,"deposits":10.0,"launches":0.0,"reopenings":7.0,"closures":3,"perm_closures":0.0,"net_reopening":4.0,"net_growth":4.0,"retention":0.852173913,"case_sla":1.0,"case_resolution":1.0,"invoice":0.83,"portfolio":0.92},{"city":"Eldoret","month":"Oct","month_index":10,"active_network":732.0,"deposits":3.0,"launches":0.0,"reopenings":6.0,"closures":5,"perm_closures":1.0,"net_reopening":1.0,"net_growth":1.0,"retention":0.8536231884,"case_sla":0.97,"case_resolution":0.97,"invoice":0.89,"portfolio":0.89},{"city":"Lusaka","month":"Jan","month_index":1,"active_network":121.0,"deposits":0.0,"launches":0.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":0.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":1.0,"portfolio":null,"solid_waste":25.7,"liquid_waste":24.8},{"city":"Lusaka","month":"Feb","month_index":2,"active_network":121.0,"deposits":1.0,"launches":0.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":0.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":0.98,"portfolio":null,"solid_waste":27.51,"liquid_waste":26.41},{"city":"Lusaka","month":"Mar","month_index":3,"active_network":121.0,"deposits":0.0,"launches":0.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":0.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":1.0,"portfolio":null,"solid_waste":28.19,"liquid_waste":28.59},{"city":"Lusaka","month":"Apr","month_index":4,"active_network":121.0,"deposits":0.0,"launches":0.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":0.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":0.99,"portfolio":null,"solid_waste":27.7594,"liquid_waste":27.1999},{"city":"Lusaka","month":"May","month_index":5,"active_network":121.0,"deposits":0.0,"launches":0.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":0.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":0.99,"portfolio":null,"solid_waste":30.1226,"liquid_waste":29.3817},{"city":"Lusaka","month":"Jun","month_index":6,"active_network":121.0,"deposits":0.0,"launches":0.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":0.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":1.0,"portfolio":null,"solid_waste":30.7645,"liquid_waste":31.658},{"city":"Lusaka","month":"Jul","month_index":7,"active_network":126.0,"deposits":6.0,"launches":5.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":5.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":1.0,"portfolio":null,"solid_waste":31.36642,"liquid_waste":31.70787},{"city":"Lusaka","month":"Aug","month_index":8,"active_network":132.0,"deposits":34.0,"launches":6.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":6.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":1.0,"portfolio":null,"solid_waste":30.1048,"liquid_waste":29.3279},{"city":"Lusaka","month":"Sep","month_index":9,"active_network":132.0,"deposits":18.0,"launches":0.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":0.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":1.0,"portfolio":null,"solid_waste":31.3328,"liquid_waste":31.76509},{"city":"Lusaka","month":"Oct","month_index":10,"active_network":142.0,"deposits":1.0,"launches":10.0,"reopenings":0.0,"closures":0,"perm_closures":0.0,"net_reopening":0.0,"net_growth":10.0,"retention":1.0,"case_sla":null,"case_resolution":null,"invoice":1.0,"portfolio":null,"solid_waste":31.9089,"liquid_waste":34.2174}],"cities":[{"city":"Nairobi","group":"Nairobi","network_target":7359,"launch_target":100,"school_closures":486},{"city":"Kisumu","group":"New cities","network_target":1627,"launch_target":null,"school_closures":31},{"city":"Eldoret","group":"New cities","network_target":864,"launch_target":null,"school_closures":38},{"city":"Lusaka","group":"New cities","network_target":223,"launch_target":null,"school_closures":0}],"reasons":[{"city":"Nairobi","reason":"Calamity","closures":15},{"city":"Nairobi","reason":"Plot sold","closures":14},{"city":"Nairobi","reason":"Demolition","closures":13},{"city":"Nairobi","reason":"FLO vacated","closures":9},{"city":"Nairobi","reason":"Found another toilet","closures":9},{"city":"Nairobi","reason":"Chamber reconstruction","closures":5},{"city":"Nairobi","reason":"FLO alt. sewer","closures":5},{"city":"Nairobi","reason":"Government demolition","closures":5},{"city":"Nairobi","reason":"FLO travelled","closures":4},{"city":"Nairobi","reason":"Frequent vandalism","closures":1},{"city":"Kisumu","reason":"FLO travelled","closures":10},{"city":"Kisumu","reason":"FLO vacated","closures":6},{"city":"Kisumu","reason":"Calamity","closures":5},{"city":"Kisumu","reason":"Found another toilet","closures":2},{"city":"Kisumu","reason":"Plot sold","closures":1},{"city":"Eldoret","reason":"FLO travelled","closures":2},{"city":"Eldoret","reason":"Calamity","closures":1},{"city":"Eldoret","reason":"FLO alt. sewer","closures":1},{"city":"Eldoret","reason":"Plot sold","closures":1}],"cases":{"totals":{"oct":{"cases":745,"resolved":550,"open":195,"within_sla":371,"outside_sla":374},"chg":{"cases":-0.16,"resolved":-0.15,"open":-0.188,"within_sla":-0.193,"outside_sla":-0.124},"sep_sla":0.519,"sep_resolution":0.729},"category":[{"category":"Maintenance","sep":567,"oct":400,"sla":0.3},{"category":"Customer Support","sep":175,"oct":244,"sla":0.754},{"category":"Logistics","sep":145,"oct":101,"sla":0.663}],"weekly":[{"week":"Wk1","sep":146,"oct":175},{"week":"Wk2","sep":220,"oct":142},{"week":"Wk3","sep":213,"oct":177},{"week":"Wk4","sep":308,"oct":251}],"location":[{"city":"Nairobi","sla":0.406},{"city":"Kisumu","sla":0.948},{"city":"Eldoret","sla":0.966}],"issues":[{"issue":"FLT not operational","cases":69},{"issue":"Broken or missing outer locks","cases":57},{"issue":"Requests for closure","cases":53},{"issue":"QR code issues","cases":47},{"issue":"Critical repossessions","cases":41}]},"caserows":[{"city":"Kisumu","category":"Maintenance","case_type":"Re-branding","week":"Wk1","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Re-branding","week":"Wk1","cases":3,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Chamber reconstruction","week":"Wk1","cases":2,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Re-branding","week":"Wk2","cases":3,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Customer Support","case_type":"Discoloured eco plate","week":"Wk1","cases":4,"resolved":4,"within_sla":4},{"city":"Nairobi","category":"Maintenance","case_type":"Re-branding","week":"Wk3","cases":3,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"Discoloured eco plate","week":"Wk2","cases":7,"resolved":7,"within_sla":7},{"city":"Nairobi","category":"Maintenance","case_type":"Re-branding","week":"Wk4","cases":6,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Chipped or eroded cement","week":"Wk1","cases":3,"resolved":3,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Tile floor","week":"Wk1","cases":2,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Chamber reconstruction","week":"Wk2","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Chipped or eroded cement","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Chamber reconstruction","week":"Wk3","cases":2,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"Discoloured eco plate","week":"Wk3","cases":4,"resolved":4,"within_sla":4},{"city":"Nairobi","category":"Maintenance","case_type":"Minor crack on wall","week":"Wk1","cases":2,"resolved":1,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Chipped or eroded cement","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"Broken HW Bucket","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Chipped or eroded cement","week":"Wk2","cases":2,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Gap between door and peripherals","week":"Wk1","cases":3,"resolved":3,"within_sla":0},{"city":"Kisumu","category":"Customer Support","case_type":"Discoloured eco plate","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Customer Support","case_type":"Broken HW Bucket","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Tile floor","week":"Wk2","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"Request for closure","week":"Wk1","cases":13,"resolved":13,"within_sla":7},{"city":"Kisumu","category":"Maintenance","case_type":"Missing logo","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Eldoret","category":"Customer Support","case_type":"Change of ownership","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Water in chamber","week":"Wk2","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"Water in chamber","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"FLT Rebuild","week":"Wk1","cases":2,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or leaking roof","week":"Wk1","cases":2,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Stool needed to raise container","week":"Wk1","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Repaint repaired parts","week":"Wk1","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Chamber reconstruction","week":"Wk4","cases":3,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Staircase Repair","week":"Wk1","cases":7,"resolved":2,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Critical repossession","week":"Wk1","cases":1,"resolved":0,"within_sla":0},{"city":"Eldoret","category":"Maintenance","case_type":"Critical repossession","week":"Wk1","cases":17,"resolved":17,"within_sla":17},{"city":"Nairobi","category":"Customer Support","case_type":"FLT Containers Stolen/Missing","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Missing logo","week":"Wk1","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or missing outer lock","week":"Wk1","cases":11,"resolved":10,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT not operational","week":"Wk1","cases":16,"resolved":16,"within_sla":14},{"city":"Nairobi","category":"Maintenance","case_type":"Broken Eco plate","week":"Wk1","cases":3,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Critical repossession","week":"Wk1","cases":4,"resolved":3,"within_sla":0},{"city":"Nairobi","category":"Logistics","case_type":"Missed collection","week":"Wk1","cases":3,"resolved":3,"within_sla":2},{"city":"Kisumu","category":"Maintenance","case_type":"Broken Roof Kit","week":"Wk1","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Customer Support","case_type":"Discoloured eco plate","week":"Wk4","cases":14,"resolved":14,"within_sla":13},{"city":"Nairobi","category":"Maintenance","case_type":"Missing or incorrect toilet tag","week":"Wk1","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Chipped or eroded cement","week":"Wk3","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Roof replacement","week":"Wk1","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Major cracks around chamber","week":"Wk1","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or Missing inner lock","week":"Wk1","cases":6,"resolved":5,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Relocation","week":"Wk1","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT/plot closed","week":"Wk1","cases":6,"resolved":6,"within_sla":6},{"city":"Nairobi","category":"Maintenance","case_type":"Water in chamber","week":"Wk3","cases":3,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken Roof Kit","week":"Wk1","cases":1,"resolved":1,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Repaint door","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Logistics","case_type":"Card Replacements","week":"Wk1","cases":3,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Maintenance","case_type":"Gap between door and peripherals","week":"Wk2","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT Containers Stolen/Missing","week":"Wk2","cases":3,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Maintenance","case_type":"Roof replacement","week":"Wk2","cases":2,"resolved":1,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Repaint door","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Repaint repaired parts","week":"Wk2","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Customer Support","case_type":"Request for closure","week":"Wk2","cases":9,"resolved":9,"within_sla":9},{"city":"Nairobi","category":"Logistics","case_type":"Collectors spilling urine","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Broken hinges- Critical","week":"Wk1","cases":4,"resolved":2,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"Fecal container replacement","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"Freshfit Replacement","week":"Wk1","cases":2,"resolved":2,"within_sla":2},{"city":"Kisumu","category":"Maintenance","case_type":"Relocation","week":"Wk2","cases":5,"resolved":5,"within_sla":5},{"city":"Nairobi","category":"Logistics","case_type":"QR code issues","week":"Wk1","cases":14,"resolved":14,"within_sla":2},{"city":"Kisumu","category":"Customer Support","case_type":"Discoloured eco plate","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Broken Eco plate","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or leaking roof","week":"Wk2","cases":2,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Door replacement-Door damaged beyond repair","week":"Wk1","cases":4,"resolved":3,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"FLT Rebuild","week":"Wk2","cases":2,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT Misuse","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Critical repossession","week":"Wk2","cases":2,"resolved":2,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Loose door hinges","week":"Wk1","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Minor crack on wall","week":"Wk2","cases":1,"resolved":1,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Gap between door and peripherals","week":"Wk2","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Tile floor","week":"Wk3","cases":1,"resolved":0,"within_sla":0},{"city":"Eldoret","category":"Maintenance","case_type":"Broken or missing outer lock","week":"Wk1","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Customer Support","case_type":"FLT Misuse","week":"Wk1","cases":3,"resolved":3,"within_sla":3},{"city":"Kisumu","category":"Logistics","case_type":"Late collection","week":"Wk1","cases":1,"resolved":1,"within_sla":0},{"city":"Kisumu","category":"Customer Support","case_type":"Freshfit Replacement","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"Water in faeces container","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"FLT Misuse","week":"Wk2","cases":3,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Maintenance","case_type":"Chipped or eroded cement","week":"Wk4","cases":4,"resolved":3,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Missing Door","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Relocation","week":"Wk2","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Door replacement-Door damaged beyond repair","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"Missing BIB Items","week":"Wk1","cases":5,"resolved":4,"within_sla":1},{"city":"Kisumu","category":"Logistics","case_type":"Missed collection","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"Broken/missing mop bucket","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Broken Eco plate","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Logistics","case_type":"Water in chamber","week":"Wk2","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or missing outer lock","week":"Wk2","cases":17,"resolved":15,"within_sla":5},{"city":"Nairobi","category":"Maintenance","case_type":"Major crack (metal exposed) on wall","week":"Wk2","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Repaint repaired parts","week":"Wk2","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Customer Support","case_type":"FLT Misuse","week":"Wk2","cases":3,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Logistics","case_type":"Closed FLT still in use","week":"Wk1","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Repaint door","week":"Wk3","cases":6,"resolved":6,"within_sla":6},{"city":"Kisumu","category":"Maintenance","case_type":"Broken or missing outer lock","week":"Wk2","cases":2,"resolved":2,"within_sla":2},{"city":"Kisumu","category":"Maintenance","case_type":"Chipped or eroded cement","week":"Wk4","cases":3,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Maintenance","case_type":"Broken Eco plate","week":"Wk2","cases":4,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Tile floor","week":"Wk4","cases":10,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Customer Support","case_type":"Missing/Broken mop","week":"Wk2","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or Missing inner lock","week":"Wk2","cases":4,"resolved":2,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Minor crack on wall","week":"Wk3","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"Request for closure","week":"Wk3","cases":12,"resolved":12,"within_sla":9},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or leaking roof","week":"Wk3","cases":12,"resolved":7,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Relocation","week":"Wk3","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Loose door hinges","week":"Wk2","cases":3,"resolved":3,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Door replacement-Door damaged beyond repair","week":"Wk2","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT not open at collection time","week":"Wk2","cases":2,"resolved":2,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT/plot closed","week":"Wk2","cases":3,"resolved":3,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Broken hinges- Critical","week":"Wk2","cases":3,"resolved":2,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Sinking FLT","week":"Wk3","cases":2,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Repaint repaired parts","week":"Wk3","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Critical repossession","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Logistics","case_type":"QR code issues","week":"Wk2","cases":4,"resolved":4,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Missing Door","week":"Wk2","cases":2,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT not operational","week":"Wk2","cases":20,"resolved":19,"within_sla":10},{"city":"Kisumu","category":"Customer Support","case_type":"No sawdust usage","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Staircase Repair","week":"Wk3","cases":3,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Critical repossession","week":"Wk3","cases":10,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Logistics","case_type":"Delay in delivery of waste containers","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Customer Support","case_type":"No sawdust use","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Eldoret","category":"Logistics","case_type":"Missed collection","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Broken Roof Kit","week":"Wk3","cases":3,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Logistics","case_type":"Card Replacements","week":"Wk2","cases":4,"resolved":4,"within_sla":3},{"city":"Nairobi","category":"Maintenance","case_type":"FLT Rebuild","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Major cracks around chamber","week":"Wk2","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Major crack (metal exposed) on wall","week":"Wk3","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Gap between door and peripherals","week":"Wk3","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Stool needed to raise container","week":"Wk3","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Broken or leaking roof","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Water in chamber","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Logistics","case_type":"Late collection","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Missing or incorrect toilet tag","week":"Wk3","cases":2,"resolved":2,"within_sla":0},{"city":"Eldoret","category":"Customer Support","case_type":"FLT Misuse","week":"Wk3","cases":4,"resolved":4,"within_sla":4},{"city":"Eldoret","category":"Maintenance","case_type":"Broken or Missing inner lock","week":"Wk2","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Roof replacement","week":"Wk3","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken Eco plate","week":"Wk3","cases":8,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or missing outer lock","week":"Wk3","cases":13,"resolved":12,"within_sla":3},{"city":"Nairobi","category":"Maintenance","case_type":"Loose door hinges","week":"Wk3","cases":4,"resolved":3,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Gap between door and peripherals","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"FLT Misuse","week":"Wk3","cases":2,"resolved":2,"within_sla":2},{"city":"Eldoret","category":"Customer Support","case_type":"Water in chamber","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or leaking roof","week":"Wk4","cases":5,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Minor crack on wall","week":"Wk4","cases":3,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Repaint repaired parts","week":"Wk4","cases":2,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken hinges- Critical","week":"Wk3","cases":2,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Logistics","case_type":"Missed collection","week":"Wk3","cases":5,"resolved":5,"within_sla":4},{"city":"Kisumu","category":"Maintenance","case_type":"Loose door hinges","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Door replacement-Door damaged beyond repair","week":"Wk3","cases":9,"resolved":2,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Loose door hinges","week":"Wk3","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Logistics","case_type":"QR code issues","week":"Wk3","cases":19,"resolved":19,"within_sla":16},{"city":"Nairobi","category":"Maintenance","case_type":"Staircase Repair","week":"Wk4","cases":7,"resolved":3,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Repaint door","week":"Wk4","cases":5,"resolved":5,"within_sla":5},{"city":"Nairobi","category":"Logistics","case_type":"Late collection","week":"Wk3","cases":2,"resolved":2,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"No sawdust use","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Broken Eco plate","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"Fecal container replacement","week":"Wk3","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"Request for closure","week":"Wk4","cases":19,"resolved":19,"within_sla":17},{"city":"Nairobi","category":"Maintenance","case_type":"Broken Roof Kit","week":"Wk3","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Logistics","case_type":"QR code issues","week":"Wk3","cases":4,"resolved":4,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or Missing inner lock","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Roof replacement","week":"Wk4","cases":4,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT not operational","week":"Wk3","cases":8,"resolved":7,"within_sla":4},{"city":"Nairobi","category":"Maintenance","case_type":"FLT Rebuild","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Repaint door","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"No QR code and flt name","week":"Wk3","cases":2,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Logistics","case_type":"Card Replacements","week":"Wk3","cases":1,"resolved":1,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Loose door hinges","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Roof replacement","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Broken Roof Kit","week":"Wk4","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Critical repossession","week":"Wk4","cases":5,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT/plot closed","week":"Wk3","cases":2,"resolved":2,"within_sla":2},{"city":"Kisumu","category":"Customer Support","case_type":"FLT Misuse","week":"Wk3","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Missing Door","week":"Wk3","cases":2,"resolved":2,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Gap between door and peripherals","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"FLT not open at collection time","week":"Wk3","cases":4,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Customer Support","case_type":"FLT Containers Stolen/Missing","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"FLT not operational","week":"Wk4","cases":25,"resolved":23,"within_sla":21},{"city":"Kisumu","category":"Maintenance","case_type":"Missing Door","week":"Wk3","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or missing outer lock","week":"Wk4","cases":12,"resolved":2,"within_sla":2},{"city":"Kisumu","category":"Maintenance","case_type":"Repaint repaired parts","week":"Wk4","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Maintenance","case_type":"Relocation","week":"Wk4","cases":4,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Broken hinges- Critical","week":"Wk4","cases":10,"resolved":8,"within_sla":5},{"city":"Nairobi","category":"Maintenance","case_type":"Door replacement-Door damaged beyond repair","week":"Wk4","cases":7,"resolved":3,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"FLT not open at collection time","week":"Wk4","cases":4,"resolved":3,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"Freshfit Replacement","week":"Wk4","cases":8,"resolved":5,"within_sla":5},{"city":"Nairobi","category":"Maintenance","case_type":"Broken or Missing inner lock","week":"Wk4","cases":6,"resolved":4,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Missing Door","week":"Wk4","cases":3,"resolved":2,"within_sla":0},{"city":"Kisumu","category":"Customer Support","case_type":"FLT Misuse","week":"Wk4","cases":4,"resolved":4,"within_sla":4},{"city":"Kisumu","category":"Maintenance","case_type":"Door replacement-Door damaged beyond repair","week":"Wk4","cases":2,"resolved":2,"within_sla":2},{"city":"Nairobi","category":"Logistics","case_type":"PVC bag replacement","week":"Wk4","cases":1,"resolved":1,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Loose door hinges","week":"Wk4","cases":3,"resolved":2,"within_sla":1},{"city":"Nairobi","category":"Logistics","case_type":"Missed collection","week":"Wk4","cases":14,"resolved":14,"within_sla":9},{"city":"Nairobi","category":"Logistics","case_type":"Late collection","week":"Wk4","cases":4,"resolved":4,"within_sla":3},{"city":"Eldoret","category":"Customer Support","case_type":"Waste Overflow","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Eldoret","category":"Customer Support","case_type":"No sawdust usage","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Broken Roof Kit","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Maintenance","case_type":"Major crack (metal exposed) on wall","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Broken or missing outer lock","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Broken Eco plate","week":"Wk4","cases":3,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Maintenance","case_type":"Broken or leaking roof","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Customer Support","case_type":"FLT/plot closed","week":"Wk4","cases":8,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Logistics","case_type":"Toilet not sprayed","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Maintenance","case_type":"Loose door hinges","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Logistics","case_type":"Extra containers","week":"Wk4","cases":1,"resolved":1,"within_sla":0},{"city":"Kisumu","category":"Logistics","case_type":"Container upgrade","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Maintenance","case_type":"Broken Eco plate","week":"Wk4","cases":5,"resolved":5,"within_sla":5},{"city":"Kisumu","category":"Maintenance","case_type":"Critical repossession","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Kisumu","category":"Logistics","case_type":"Missed collection","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Lusaka","category":"Customer Support","case_type":"Fecal container replacement","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Lusaka","category":"Logistics","case_type":"Urine container replacement","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Lusaka","category":"Customer Support","case_type":"Missing sanitary bin","week":"Wk4","cases":3,"resolved":0,"within_sla":0},{"city":"Lusaka","category":"Customer Support","case_type":"Missing BIB Items","week":"Wk4","cases":3,"resolved":0,"within_sla":0},{"city":"Eldoret","category":"Customer Support","case_type":"Water in faeces container","week":"Wk4","cases":1,"resolved":1,"within_sla":1},{"city":"Nairobi","category":"Logistics","case_type":"Card Replacements","week":"Wk4","cases":3,"resolved":3,"within_sla":3},{"city":"Nairobi","category":"Logistics","case_type":"QR code issues","week":"Wk4","cases":6,"resolved":6,"within_sla":6},{"city":"Nairobi","category":"Maintenance","case_type":"Material Retrieval","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Kisumu","category":"Logistics","case_type":"Late collection","week":"Wk4","cases":1,"resolved":0,"within_sla":0},{"city":"Nairobi","category":"Customer Support","case_type":"No QR code and flt name","week":"Wk4","cases":1,"resolved":0,"within_sla":0}],"hl":{"all":{"well":["Nairobi retention recovered to 94.0% from 89.4%, and net reopening improved from −79 to −56.","Lusaka restarted launches and grew its network 7.6%, the only region to grow meaningfully.","Kisumu case SLA rose to 95%, and Eldoret invoice collection rose to 89%.","Refunds in Nairobi fell from 7 to 1."],"attn":["The network shrank 0.4% to 9,525: launches fell 63.7% (102 → 37) and deposits halved (133 → 66).","Nairobi permanent closures jumped from 10 to 73, and Kisumu net reopening swung from +6 to −16.","Nairobi Maintenance cases met SLA only 11.7% of the time, the main drag on case quality.","555 school toilets on holiday break are still in the active network, 5.8% of it."],"focus":["Restart launches in Nairobi, Kisumu and Eldoret by rebuilding the deposit pipeline.","Fix Nairobi’s Maintenance SLA.","Track the 555 holiday-break school toilets as term resumes."]},"Nairobi":{"well":["Retention recovered to 94.0% from 89.4%.","Closures eased 16.7% (96 → 80) and reopenings rose 41.2% (17 → 24), so net reopening improved from −79 to −56.","Refunds fell from 7 to 1."],"attn":["Permanent closures jumped from 10 to 73.","Launches fell 77% (100 → 23), only 23% of the 100-toilet target, and deposits fell 39.8% (103 → 62).","Invoice collection (92%), portfolio (91%) and case resolution (78% → 69%) slipped.","Maintenance met SLA on just 11.7% of 315 cases.","486 school toilets on holiday break are in the active network."],"focus":["Rebuild the deposit pipeline to restart launches.","Fix the Maintenance SLA.","Track the 486 school toilets as term resumes."]},"Kisumu":{"well":["Launches doubled (2 → 4).","Case SLA rose to 95% (+6.7%), and portfolio collected rose to 83.8% (+4.4%)."],"attn":["Closures rose 71.4% (14 → 24) while reopenings fell 60% (20 → 8), so net reopening swung from +6 to −16 and the network shrank by 12.","No new deposits were received (2 → 0), so the November launch pipeline is empty.","The network is 126 below target, and invoice collection slipped to 87.8%.","31 school toilets on holiday break are in the active network."],"focus":["Rebuild deposits so launches can continue.","Push reopenings back above closures."]},"Eldoret":{"well":["The network held steady at 732 (+0.1%).","Invoice collection rose to 89% (+7.2%), and case SLA and resolution held at 97%."],"attn":["No launches for a second month, and deposits fell 70% (10 → 3).","The network is 132 below target. The launch pause that began in September drives the gap.","38 school toilets on holiday break are in the active network."],"focus":["Restart launches; without them the network can only hold steady."]},"Lusaka":{"well":["Launched 10 toilets (0 → 10), growing the network 7.6% from 132 to 142.","Retention and invoice collection stayed at 100%.","Waste removal rose: solid +1.8% and liquid +7.7%."],"attn":["Deposits fell 94.4% (18 → 1).","The network is still 81 below its 223 target.","8 cases are logged and all are still open."],"focus":["Turn spillover deposits into launches to keep growth going."]}}};
+const CITIES = D.cities.map(c => c.city);
+const NEW_CITIES = D.cities.filter(c => c.group === 'New cities').map(c => c.city);
+const INFO = Object.fromEntries(D.cities.map(c => [c.city, c]));
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'];
+const RATE = new Set(['retention','invoice','portfolio','case_sla','case_resolution']);
+const LOWER_BETTER = new Set(['closures','perm_closures']);
+let selected = new Set(CITIES);
+
+const fInt = n => (n < 0 ? '−' : '') + Math.abs(Math.round(n)).toLocaleString('en-US');
+const fSigned = n => (n > 0 ? '+' : '') + fInt(n);
+const fPct = (n, d = 1) => (n * 100).toFixed(d) + '%';
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const NS = 'http://www.w3.org/2000/svg';
+const s = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
+
+const rec = (city, m) => D.monthly.find(r => r.city === city && r.month === m);
+const sel = () => CITIES.filter(c => selected.has(c));
+const total = (m, f) => { const v = sel().map(c => rec(c, m)[f]).filter(x => x != null); return v.length ? v.reduce((a, b) => a + b, 0) : null; };
+
+// ---- slicer
+const chipBox = document.getElementById('cityChips');
+CITIES.forEach(c => {
+  const b = el('button', 'chip', c); b.type = 'button'; b.dataset.city = c;
+  b.addEventListener('click', () => { if (selected.has(c) && selected.size === 1) return; selected.has(c) ? selected.delete(c) : selected.add(c); render(); });
+  chipBox.appendChild(b);
+});
+document.querySelectorAll('[data-quick]').forEach(b => b.addEventListener('click', () => { selected = new Set(b.dataset.quick === 'all' ? CITIES : NEW_CITIES); render(); }));
+document.getElementById('metric').addEventListener('change', renderTrend);
+
+// ---- change vs September
+function change(f, oct, sep) {
+  if (oct == null || sep == null) return null;
+  if (f === 'net_reopening' || f === 'net_growth') {
+    if (oct === sep) return {t: '→ Same as Sep (' + fSigned(sep) + ')', k: ''};
+    return {t: (oct > sep ? '▲' : '▼') + ' from ' + fSigned(sep) + ' in Sep', k: oct > sep ? 'good' : 'bad'};
+  }
+  if (sep === 0) return oct === 0 ? {t: '→ No change vs Sep', k: ''} : {t: '▲ New vs Sep (0)', k: LOWER_BETTER.has(f) ? 'bad' : 'good'};
+  const c = (oct - sep) / Math.abs(sep);
+  const prev = RATE.has(f) ? fPct(sep) : fInt(sep);
+  if (oct === sep) return {t: '→ No change vs Sep (' + prev + ')', k: ''};
+  if (Math.abs(c) < 0.001 && !RATE.has(f)) { const up = oct > sep, good = LOWER_BETTER.has(f) ? !up : up; return {t: (up ? '▲ ' : '▼ ') + fInt(Math.abs(oct - sep)) + ' vs Sep (' + prev + ')', k: good ? 'good' : 'bad'}; }
+  const up = c > 0, good = LOWER_BETTER.has(f) ? !up : up;
+  return {t: (up ? '▲ ' : '▼ ') + fPct(Math.abs(c)) + ' vs Sep (' + prev + ')', k: good ? 'good' : 'bad'};
+}
+
+function tile(box, o) {
+  const t = el('div', 'tile');
+  t.appendChild(el('div', 'l', o.label));
+  const v = el('div', 'v', o.value); if (o.small) v.appendChild(el('small', null, o.small)); t.appendChild(v);
+  if (o.meter != null) { const m = el('div', 'meter'); const i = el('i'); i.style.width = Math.min(100, o.meter * 100) + '%'; m.appendChild(i); t.appendChild(m); }
+  if (o.chg) t.appendChild(el('div', 'c ' + o.chg.k, o.chg.t));
+  if (o.split) { const sp = el('div', 'split'); o.split.forEach(([c, val]) => { const x = el('span', null, c + ' '); x.appendChild(el('b', null, val)); sp.appendChild(x); }); t.appendChild(sp); }
+  if (o.note) t.appendChild(el('div', 'n', o.note));
+  box.appendChild(t);
+}
+
+function countTile(box, label, f, note) {
+  const o = total('Oct', f), p = total('Sep', f);
+  tile(box, {label, value: f.startsWith('net') ? fSigned(o) : fInt(o), chg: change(f, o, p), note});
+}
+function rateTile(box, label, f) {
+  const cs = sel().filter(c => rec(c, 'Oct')[f] != null);
+  if (!cs.length) return;
+  if (cs.length === 1) {
+    const c = cs[0];
+    tile(box, {label, value: fPct(rec(c, 'Oct')[f]), chg: change(f, rec(c, 'Oct')[f], rec(c, 'Sep')[f]), note: sel().length > 1 ? c + ' only' : null});
+  } else tile(box, {label, value: 'By region', split: cs.map(c => [c, fPct(rec(c, 'Oct')[f])]), note: 'Rates are not combined across regions'});
+}
+
+function renderTiles() {
+  const g = document.getElementById('tGrowth'), n = document.getElementById('tNetwork'), sv = document.getElementById('tService');
+  [g, n, sv].forEach(b => b.replaceChildren());
+  const cs = sel(), one = cs.length === 1 ? cs[0] : null;
+
+  countTile(g, 'Deposits received', 'deposits');
+  const lo = total('Oct', 'launches');
+  if (one && INFO[one].launch_target) {
+    const tg = INFO[one].launch_target;
+    tile(g, {label: 'Toilets launched', value: fInt(lo), small: ' / ' + fInt(tg), meter: lo / tg, chg: change('launches', lo, total('Sep', 'launches')), note: fPct(lo / tg, 0) + ' of the monthly target'});
+  } else countTile(g, 'Toilets launched', 'launches', cs.includes('Nairobi') ? 'Nairobi target is 100 a month' : null);
+  countTile(g, 'Net growth', 'net_growth', 'Change in active network over the month');
+
+  const an = total('Oct', 'active_network'), tg = cs.reduce((a, c) => a + INFO[c].network_target, 0);
+  tile(n, {label: 'Active network', value: fInt(an), small: ' / ' + fInt(tg), meter: an / tg, chg: change('active_network', an, total('Sep', 'active_network')), note: fPct(an / tg) + ' of target · ' + fInt(tg - an) + ' below'});
+  countTile(n, 'Closures', 'closures', fInt(total('Oct', 'perm_closures')) + ' permanent');
+  countTile(n, 'Reopenings', 'reopenings');
+  countTile(n, 'Net reopening', 'net_reopening', 'Reopenings minus closures');
+  const sc = cs.reduce((a, c) => a + INFO[c].school_closures, 0);
+  tile(n, {label: 'School closures (holiday)', value: fInt(sc), note: 'Still counted in the active network · ' + fPct(sc / an) + ' of it'});
+
+  rateTile(sv, 'Retention rate', 'retention');
+  rateTile(sv, 'Invoice collection', 'invoice');
+  rateTile(sv, 'Portfolio collected', 'portfolio');
+  rateTile(sv, 'Case resolution SLA', 'case_sla');
+  rateTile(sv, 'Case resolution', 'case_resolution');
+  if (one === 'Lusaka') {
+    const r = rec('Lusaka', 'Oct'), p = rec('Lusaka', 'Sep');
+    tile(sv, {label: 'Solid waste removed (t)', value: r.solid_waste.toFixed(1), chg: change('solid_waste', r.solid_waste, p.solid_waste)});
+    tile(sv, {label: 'Liquid waste removed', value: r.liquid_waste.toFixed(1), chg: change('liquid_waste', r.liquid_waste, p.liquid_waste)});
+  }
+}
+
+// ---- chart helpers
+function tooltip(box) {
+  const tt = el('div', 'tt'); tt.hidden = true; box.appendChild(tt);
+  return {
+    show(e, title, line) {
+      tt.replaceChildren(el('div', 'k', title), el('div', null, line)); tt.hidden = false;
+      const r = box.getBoundingClientRect(), w = tt.offsetWidth;
+      tt.style.left = Math.max(0, Math.min(r.width - w, e.clientX - r.left + 12)) + 'px';
+      tt.style.top = (e.clientY - r.top + 14) + 'px';
+    },
+    hide() { tt.hidden = true; }
+  };
+}
+const textW = (svg, strs) => { let m = 0; strs.forEach(t => { const n = s('text', {}, t); svg.appendChild(n); m = Math.max(m, n.getComputedTextLength()); n.remove(); }); return m; };
+const svgIn = (box, H) => { const W = box.clientWidth || 360; const svg = s('svg', {viewBox: `0 0 ${W} ${H}`, width: W, height: H}); box.appendChild(svg); return [svg, W]; };
+const hover = (node, tt, title, line) => { node.addEventListener('mousemove', e => tt.show(e, title, line)); node.addEventListener('mouseleave', () => tt.hide()); };
+
+function hbars(box, items, {max, highlightFirst, valueFmt, tip, target}) {
+  box.replaceChildren();
+  if (!items.length) { box.appendChild(el('div', 'empty', 'Nothing to show for the selected regions.')); return; }
+  const step = 28, bh = 16, H = items.length * step;
+  const [svg, W] = svgIn(box, H);
+  const lw = Math.min(W * 0.45, textW(svg, items.map(d => d.label)) + 12);
+  const vw = textW(svg, items.map(valueFmt)) + 10;
+  const x = v => lw + (W - vw - lw) * (v / max);
+  const tt = tooltip(box);
+  items.forEach((d, i) => {
+    const y = i * step + 5;
+    svg.appendChild(s('text', {x: 0, y: y + 12, class: 'fg'}, d.label));
+    svg.appendChild(s('rect', {x: lw, y, width: x(max) - lw, height: bh, rx: 3, fill: 'var(--track)'}));
+    const muted = highlightFirst && i > 0;
+    const b = s('rect', {x: lw, y, width: Math.max(1, x(d.value) - lw), height: bh, rx: 3, fill: muted ? 'var(--muted)' : 'var(--accent)', opacity: muted ? .45 : 1});
+    hover(b, tt, d.label, tip(d)); svg.appendChild(b);
+    if (target) svg.appendChild(s('line', {x1: x(d.target), x2: x(d.target), y1: y - 3, y2: y + bh + 3, stroke: 'var(--fg)', 'stroke-width': 2}));
+    svg.appendChild(s('text', {x: x(max) + 6, y: y + 12}, valueFmt(d)));
+  });
+}
+
+// grouped horizontal bars: two series (Sep light, Oct accent)
+function pairs(box, items, {note}) {
+  box.replaceChildren();
+  const bh = 11, block = 44, H = items.length * block;
+  const [svg, W] = svgIn(box, H);
+  const lw = Math.min(W * 0.4, textW(svg, items.flatMap(d => [d.label, note ? note(d) : ''])) + 12);
+  const max = Math.max(1, ...items.flatMap(d => [Math.abs(d.sep), Math.abs(d.oct)]));
+  const vw = textW(svg, items.flatMap(d => [fInt(d.sep), fInt(d.oct)])) + 10;
+  const x = v => lw + (W - vw - lw) * (v / max);
+  const tt = tooltip(box);
+  items.forEach((d, i) => {
+    const y0 = i * block + 4;
+    svg.appendChild(s('text', {x: 0, y: y0 + 11, class: 'fg'}, d.label));
+    if (note) svg.appendChild(s('text', {x: 0, y: y0 + 27}, note(d)));
+    [['September', d.sep, 'var(--brand-soft)'], ['October', d.oct, 'var(--accent)']].forEach(([n, v, col], j) => {
+      const y = y0 + j * (bh + 3);
+      const b = s('rect', {x: lw, y, width: Math.max(1, x(v) - lw), height: bh, rx: 2, fill: col});
+      hover(b, tt, d.label, 'September ' + fInt(d.sep) + ' · October ' + fInt(d.oct));
+      svg.appendChild(b);
+      svg.appendChild(s('text', {x: x(v) + 6, y: y + 10}, fInt(v)));
+    });
+  });
+}
+
+function renderTrend() {
+  const f = document.getElementById('metric').value;
+  const label = document.getElementById('metric').selectedOptions[0].textContent;
+  const box = document.getElementById('multiples'); box.replaceChildren();
+  const jobs = sel().map(city => {
+    const card = el('div', 'mult'); const ch = el('div', 'chart');
+    box.appendChild(card); return {city, card, ch};
+  });
+  jobs.forEach(({city, card, ch}) => {
+    const pts = MONTHS.map((m, i) => ({m, i, v: rec(city, m)[f]})).filter(p => p.v != null);
+    const head = el('div', 'mh'); head.appendChild(el('b', null, city));
+    const last = pts.find(p => p.m === 'Oct');
+    head.appendChild(el('span', null, last ? (RATE.has(f) ? fPct(last.v) : (f.startsWith('net') ? fSigned(last.v) : fInt(last.v))) : '—'));
+    card.appendChild(head);
+    card.appendChild(ch);
+    if (pts.length < 2) { ch.appendChild(el('div', 'empty', label + ' is not tracked for ' + city + '.')); return; }
+    const H = 120, m = {t: 12, b: 20, l: 4, r: 4};
+    const [svg, W] = svgIn(ch, H);
+    let lo = Math.min(...pts.map(p => p.v)), hi = Math.max(...pts.map(p => p.v));
+    if (f.startsWith('net')) { lo = Math.min(lo, 0); hi = Math.max(hi, 0); }
+    if (lo === hi) { lo -= 1; hi += 1; }
+    const pad = (hi - lo) * 0.12; lo -= pad; hi += pad;
+    const x = i => m.l + (W - m.l - m.r) * (i / (MONTHS.length - 1));
+    const y = v => m.t + (H - m.t - m.b) * (1 - (v - lo) / (hi - lo));
+    if (lo < 0 && hi > 0) svg.appendChild(s('line', {x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), stroke: 'var(--muted)', 'stroke-dasharray': '3 3', opacity: .6}));
+    svg.appendChild(s('path', {d: pts.map((p, k) => (k ? 'L' : 'M') + x(p.i) + ',' + y(p.v)).join(''), fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round'}));
+    const tt = tooltip(ch);
+    const fmt = v => RATE.has(f) ? fPct(v) : (f.startsWith('net') ? fSigned(v) : fInt(v));
+    pts.forEach(p => {
+      const isLast = p.m === 'Oct';
+      const c = s('circle', {cx: x(p.i), cy: y(p.v), r: isLast ? 4.5 : 3, fill: isLast ? 'var(--accent2)' : 'var(--accent)'});
+      hover(c, tt, p.m + ' 2026 · ' + city, label + ' ' + fmt(p.v));
+      svg.appendChild(c);
+    });
+    MONTHS.forEach((mm, i) => { if (W > 300 || i % 3 === 0 || i === 9) svg.appendChild(s('text', {x: x(i), y: H - 4, 'text-anchor': i === 0 ? 'start' : i === 9 ? 'end' : 'middle'}, mm)); });
+  });
+}
+
+function renderCharts() {
+  const cs = sel();
+  hbars(document.getElementById('cNetwork'), cs.map(c => ({label: c, value: rec(c, 'Oct').active_network / INFO[c].network_target, target: 1, c})),
+    {max: 1.05, target: true, valueFmt: d => fPct(d.value), tip: d => fInt(rec(d.c, 'Oct').active_network) + ' of ' + fInt(INFO[d.c].network_target) + ' · ' + fInt(INFO[d.c].network_target - rec(d.c, 'Oct').active_network) + ' below target'});
+
+  pairs(document.getElementById('cFlow'), [['Deposits received', 'deposits'], ['Toilets launched', 'launches'], ['Reopenings', 'reopenings'], ['Closures', 'closures'], ['Permanent closures', 'perm_closures']]
+    .map(([label, f]) => ({label, sep: total('Sep', f), oct: total('Oct', f)})), {});
+
+  const agg = {};
+  D.reasons.filter(r => selected.has(r.city)).forEach(r => agg[r.reason] = (agg[r.reason] || 0) + r.closures);
+  const ri = Object.entries(agg).map(([label, value]) => ({label, value})).sort((a, b) => b.value - a.value);
+  const tot = ri.reduce((a, d) => a + d.value, 0);
+  hbars(document.getElementById('cReasons'), ri, {max: ri.length ? ri[0].value : 1, highlightFirst: true, valueFmt: d => fInt(d.value), tip: d => fInt(d.value) + ' closures · ' + fPct(d.value / tot, 0) + ' of total'});
+
+
+}
+
+function renderCases() {
+  const c = D.cases, b = document.getElementById('tCases'); b.replaceChildren();
+  const caseCities = sel().filter(x => x !== 'Lusaka');
+  const rows = D.caserows.filter(r => caseCities.includes(r.city));
+  const sepOK = ['Nairobi', 'Kisumu', 'Eldoret'].every(x => caseCities.includes(x));
+  const note = document.getElementById('caseNote');
+  note.textContent = (caseCities.length ? 'October cases for ' + caseCities.join(', ') + '. ' : '') +
+    (selected.has('Lusaka') ? 'Lusaka\'s 8 cases (all open) are excluded to stay comparable with September. ' : '') +
+    (caseCities.length && !sepOK ? 'September comparisons are only available for Nairobi, Kisumu and Eldoret together.' : '');
+  document.getElementById('catLegend').hidden = !sepOK;
+  document.getElementById('wkLegend').hidden = !sepOK;
+  ['cCat', 'cWeekly', 'cLoc', 'cIssues'].forEach(id => document.getElementById(id).replaceChildren());
+  document.getElementById('caseGrid').hidden = !rows.length;
+  if (!rows.length) {
+    note.textContent = 'Lusaka has 8 cases logged in October, all still open. Case resolution and SLA are not tracked for Lusaka yet.';
+    return;
+  }
+  const sum = (L, f) => L.reduce((a, r) => a + r[f], 0);
+  const n = sum(rows, 'cases'), res = sum(rows, 'resolved'), sla = sum(rows, 'within_sla');
+  const ch = k => { if (!sepOK) return null; const v = c.totals.chg[k]; return {t: (v > 0 ? '▲ ' : '▼ ') + fPct(Math.abs(v)) + ' vs Sep', k: ''}; };
+  tile(b, {label: 'Cases logged', value: fInt(n), chg: ch('cases')});
+  tile(b, {label: 'Resolved', value: fInt(res), small: ' · ' + fPct(res / n), chg: ch('resolved'), note: sepOK ? 'September: ' + fPct(c.totals.sep_resolution) : null});
+  tile(b, {label: 'Still open', value: fInt(n - res), chg: ch('open')});
+  tile(b, {label: 'Resolved within SLA', value: fInt(sla), small: ' · ' + fPct(sla / n), chg: ch('within_sla'), note: sepOK ? 'September: ' + fPct(c.totals.sep_sla) : null});
+  tile(b, {label: 'Outside SLA', value: fInt(n - sla), chg: ch('outside_sla')});
+
+  const group = (key, order) => {
+    const m = {}; rows.forEach(r => { const g = m[r[key]] ||= {cases: 0, within_sla: 0}; g.cases += r.cases; g.within_sla += r.within_sla; });
+    return (order || Object.keys(m)).filter(k => m[k]).map(k => ({key: k, ...m[k]}));
+  };
+  const cats = group('category', ['Maintenance', 'Customer Support', 'Logistics']);
+  const sepCat = Object.fromEntries(c.category.map(r => [r.category, r.sep]));
+  if (sepOK) pairs(document.getElementById('cCat'), cats.map(g => ({label: g.key, sep: sepCat[g.key], oct: g.cases, sla: g.within_sla / g.cases})), {note: d => fPct(d.sla) + ' within SLA'});
+  else hbars(document.getElementById('cCat'), cats.map(g => ({label: g.key, value: g.cases, g})), {max: Math.max(...cats.map(g => g.cases)), valueFmt: d => fInt(d.value) + ' · ' + fPct(d.g.within_sla / d.g.cases, 0) + ' SLA', tip: d => fInt(d.value) + ' cases · ' + fPct(d.g.within_sla / d.g.cases) + ' within SLA'});
+
+  const wks = group('week', ['Wk1', 'Wk2', 'Wk3', 'Wk4']);
+  const sepWk = Object.fromEntries(c.weekly.map(r => [r.week, r.sep]));
+  if (sepOK) pairs(document.getElementById('cWeekly'), wks.map(g => ({label: g.key, sep: sepWk[g.key], oct: g.cases})), {});
+  else hbars(document.getElementById('cWeekly'), wks.map(g => ({label: g.key, value: g.cases})), {max: Math.max(...wks.map(g => g.cases)), valueFmt: d => fInt(d.value), tip: d => fInt(d.value) + ' cases'});
+
+  const loc = group('city', caseCities);
+  hbars(document.getElementById('cLoc'), loc.map(g => ({label: g.key, value: g.within_sla / g.cases, g})), {max: 1, valueFmt: d => fPct(d.value), tip: d => fInt(d.g.within_sla) + ' of ' + fInt(d.g.cases) + ' cases within SLA'});
+
+  const issues = group('case_type').sort((a, b2) => b2.cases - a.cases).slice(0, 5);
+  hbars(document.getElementById('cIssues'), issues.map(g => ({label: g.key, value: g.cases})), {max: issues[0].cases, highlightFirst: true, valueFmt: d => fInt(d.value), tip: d => fInt(d.value) + ' cases in October'});
+}
+
+function renderHighlights() {
+  const cs = sel(), all = cs.length === CITIES.length;
+  document.getElementById('hlTitle').textContent = all ? 'Highlights, all regions' : 'Highlights, ' + cs.join(', ');
+  const fill = (id, key) => {
+    const ul = document.getElementById(id); ul.replaceChildren();
+    const items = all ? D.hl.all[key].map(t => [null, t]) : cs.flatMap(c => D.hl[c][key].map(t => [c, t]));
+    items.forEach(([c, t]) => { const li = el('li'); if (c && cs.length > 1) li.appendChild(el('b', null, c + ': ')); li.appendChild(document.createTextNode(t)); ul.appendChild(li); });
+  };
+  fill('hlWell', 'well'); fill('hlAttn', 'attn'); fill('hlFocus', 'focus');
+}
+
+function renderTable() {
+  const tb = document.getElementById('tbl'); tb.replaceChildren();
+  const opt = (v, fn) => v == null ? '—' : fn(v);
+  sel().forEach(c => {
+    const r = rec(c, 'Oct'), t = INFO[c].network_target;
+    const vals = [c, fInt(r.active_network), fInt(t), fPct(r.active_network / t), fInt(r.deposits), fInt(r.launches) + (INFO[c].launch_target ? ' / ' + INFO[c].launch_target : ''),
+      fInt(r.reopenings), fInt(r.closures), fInt(r.perm_closures), fSigned(r.net_reopening), opt(r.retention, fPct), opt(r.invoice, fPct), opt(r.portfolio, fPct), opt(r.case_sla, fPct)];
+    const tr = el('tr');
+    vals.forEach((v, i) => tr.appendChild(el('td', i === 9 && r.net_reopening < 0 ? 'bad' : null, v)));
+    tb.appendChild(tr);
+  });
+}
+
+function render() {
+  document.querySelectorAll('#cityChips .chip').forEach(b => b.setAttribute('aria-pressed', String(selected.has(b.dataset.city))));
+  const list = sel();
+  document.getElementById('selText').textContent = list.length === CITIES.length ? 'Showing all regions' : 'Showing ' + list.join(', ');
+  renderTiles(); renderTrend(); renderCharts(); renderCases(); renderHighlights(); renderTable();
+}
+let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { renderTrend(); renderCharts(); renderCases(); }, 120); });
+render();
+</script>
+</body>
+</html>
