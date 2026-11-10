@@ -259,6 +259,91 @@ td.bad{color:var(--bad)}
 .selbox.locked button svg,.selbox.locked select{background-image:none}
 .selbox.locked::after{content:'';width:12px;height:12px;margin-right:8px;flex:none;background:var(--muted);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E") center/contain no-repeat}
 .selbox.locked button svg{display:none}
+
+/* ---------- responsive refinements ---------- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden}
+img,svg{max-width:100%}
+.chart{min-width:0;width:100%}
+.chart svg{display:block;overflow:visible}
+.tt{white-space:normal;max-width:min(18rem,calc(100vw - 48px));line-height:1.35}
+.selbox,.seg,.pill{min-width:0;max-width:100%}
+.selbox select{min-width:0;text-overflow:ellipsis}
+
+/* large monitors: use the extra width, keep header, filters and content aligned */
+@media (min-width: 1700px){
+  .page{max-width:112rem}
+  .top-in,.regions{max-width:112rem}
+}
+
+/* tables: keep readable, scroll sideways when narrow, first column stays in view */
+.tablewrap{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;max-width:100%}
+@media (max-width: 760px){
+  .tablewrap table{min-width:34rem}
+  .tablewrap th,.tablewrap td{white-space:nowrap}
+  .tablewrap th:first-child,.tablewrap td:first-child{position:sticky;left:0;z-index:1;background:var(--panel);box-shadow:1px 0 0 var(--line-soft)}
+}
+
+/* tablets */
+@media (max-width: 1100px){
+  .grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr))}
+}
+@media (max-width: 900px){
+  .top-in{padding-block:12px}
+  .page{gap:18px;padding-block:18px 40px}
+  .dpanel{width:100%}
+}
+
+/* phones: filters become a tidy full-width grid, buttons stay large enough to tap */
+@media (max-width: 640px){
+  .top-in,.regions,.page{padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+  .ttl{flex:1 1 calc(100% - 52px)}
+  .ttl p{font-size:12.5px}
+  .ctl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
+  .ctl > *{width:100%;min-width:0}
+  .ctl > [hidden]{display:none!important}
+  .ctl #weekBox,.ctl #viewSeg,.ctl #cmpBox{grid-column:1/-1}
+  .ctl .pill{order:0;justify-content:center}
+  .ctl #dateBox,.ctl #monthBox{order:1}
+  .ctl #weekBox{order:2}
+  .ctl #viewSeg{order:3}
+  .ctl #cmpBox{order:4}
+  .ctl .btn{order:5}
+  .selbox{justify-content:space-between;min-height:40px}
+  .selbox select{flex:1;max-width:none;font-size:14px}
+  .datebox button{flex:1;justify-content:space-between;min-height:38px}
+  .seg{display:flex}
+  .seg button{flex:1;padding:8px 6px;min-height:36px}
+  .btn{justify-content:center;min-height:40px;padding:9px 10px}
+  .chips{gap:6px}
+  .chip{padding:7px 12px}
+  .regions{gap:8px}
+  .regions .seltext{flex-basis:100%}
+  .card{padding:14px}
+  .datepop{left:0;right:0;min-width:0}
+  .dhead{padding:16px 14px 8px}
+  .dtools{padding:0 14px 10px}
+  .dtable{padding:0 14px 16px}
+}
+@media (max-width: 360px){
+  .kpi{padding:10px}
+  .kpi .v{font-size:20px}
+  .seg button{font-size:12.5px}
+}
+/* daily mini charts: at most five per row so they stretch on wide screens; two per row on phones */
+.dailygrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,max(10.5rem,calc((100% - 48px) / 5))),1fr))}
+@media (max-width: 640px){
+  .dailygrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .dailygrid > .dmini.odd-last{grid-column:1/-1}
+  .dmini{padding:8px 10px}
+}
+/* two-column phone card grids: an odd last card takes the full row instead of leaving a gap */
+@media (max-width: 520px){
+  .cards > .kpi:last-child:nth-child(odd){grid-column:1/-1}
+}
+.datebox button{min-width:0}
+#dateLbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+@media (max-width: 640px){ .ctl .pill{font-size:12.5px;padding:7px 8px} .selbox{padding-left:10px} }
 </style>
 </head>
 <body>
@@ -739,6 +824,7 @@ function renderDaily(w) {
     'School reopenings': d => D2.reopenings.filter(r => r.school && cs.includes(r.city) && r.date === d).length,
   };
   const jobs = Object.entries(per).map(([name, fn]) => { const card = el('div', 'dmini'); const ch = el('div', 'chart'); box.appendChild(card); return {name, fn, card, ch}; });
+  if (jobs.length % 2) jobs[jobs.length - 1].card.classList.add('odd-last'); // spans the row on two-column phone layouts
   jobs.forEach(({name, fn, card, ch}) => {
     const vals = effDays(w).map(d => ({d, v: fn(d)}));
     const tot = vals.filter(x => !days || days.has(x.d)).reduce((a, x) => a + x.v, 0);
@@ -746,15 +832,17 @@ function renderDaily(w) {
     card.append(head, ch);
     const H = 92, top = 14, bot = 18;
     const [svg, W] = svgIn(ch, H);
-    const max = Math.max(1, ...vals.map(x => x.v)), n = vals.length, gap = 4, bw = (W - gap * (n - 1)) / n;
+    const max = Math.max(1, ...vals.map(x => x.v)), n = vals.length, gap = n > 10 ? 2 : 4, bw = (W - gap * (n - 1)) / n;
     const tt = tooltip(ch);
+    const every = Math.max(1, Math.ceil((textW(svg, ['30']) + 4) / (bw + gap)));
+    const valFits = textW(svg, vals.map(x => fInt(x.v))) <= bw + gap - 1;
     vals.forEach((x, i) => {
       const on = !days || days.has(x.d), h = (H - top - bot) * x.v / max, X = i * (bw + gap);
       svg.appendChild(s('rect', {x: X, y: H - bot - Math.max(h, 1), width: bw, height: Math.max(h, 1), rx: 2, fill: x.v ? (on ? 'var(--accent)' : 'var(--brand-soft)') : 'var(--track)'}));
       const hit = s('rect', {x: X, y: 0, width: bw, height: H, fill: 'transparent'});
       hover(hit, tt, dayLabel(x.d) + ' Nov', name + ': ' + fInt(x.v)); svg.appendChild(hit);
-      if (x.v) svg.appendChild(s('text', {x: X + bw / 2, y: H - bot - h - 3, 'text-anchor': 'middle', class: 'fg'}, fInt(x.v)));
-      svg.appendChild(s('text', {x: X + bw / 2, y: H - 4, 'text-anchor': 'middle'}, String(new Date(x.d + 'T00:00:00Z').getUTCDate())));
+      if (x.v && (valFits || x.v === max)) svg.appendChild(s('text', edgeAnchor({x: X + bw / 2, y: H - bot - h - 3, class: 'fg'}, svg, W, fInt(x.v)), fInt(x.v)));
+      if (i % every === 0 || i === n - 1 && (n - 1) % every >= every / 2) { const t = String(new Date(x.d + 'T00:00:00Z').getUTCDate()); svg.appendChild(s('text', edgeAnchor({x: X + bw / 2, y: H - 4}, svg, W, t), t)); }
     });
   });
   casesDueDaily(w, box);
@@ -773,18 +861,32 @@ function casesDueDaily(w, box) {
   card.append(head, sub, leg, ch);
   const H = 120, top = 16, bot = 18;
   const [svg, W] = svgIn(ch, H);
-  const max = Math.max(1, ...vals.map(x => x.due)), n = vals.length, gap = 8, bw = (W - gap * (n - 1)) / n;
+  const n = vals.length, gap = Math.min(8, Math.max(2, W / n * .15)), bw = (W - gap * (n - 1)) / n, max = Math.max(1, ...vals.map(x => x.due));
   const tt = tooltip(ch);
+  // day labels: "Mon 9" when there is room, the day number otherwise; value labels "resolved/due" only when they fit
+  const longDay = textW(svg, vals.map(x => dayLabel(x.d))) + 6 <= bw + gap;
+  const dayTxt = d => longDay ? dayLabel(d) : String(new Date(d + 'T00:00:00Z').getUTCDate());
+  const every = Math.max(1, Math.ceil((textW(svg, vals.map(x => dayTxt(x.d))) + 4) / (bw + gap)));
+  const fullVal = textW(svg, vals.map(x => fInt(x.res) + '/' + fInt(x.due))) + 2 <= bw + gap;
+  const shortVal = textW(svg, vals.map(x => fInt(x.due))) + 2 <= bw + gap;
   vals.forEach((x, i) => {
     const on = !days || days.has(x.d), X = i * (bw + gap), hD = (H - top - bot) * x.due / max, hR = (H - top - bot) * x.res / max;
     svg.appendChild(s('rect', {x: X, y: H - bot - Math.max(hD, 1), width: bw, height: Math.max(hD, 1), rx: 2, fill: x.due ? 'var(--brand-soft)' : 'var(--track)', opacity: on ? 1 : .45}));
     if (x.res) svg.appendChild(s('rect', {x: X + bw * .2, y: H - bot - hR, width: bw * .6, height: hR, rx: 2, fill: 'var(--accent)', opacity: on ? 1 : .35}));
-    if (x.due) svg.appendChild(s('text', {x: X + bw / 2, y: H - bot - hD - 3, 'text-anchor': 'middle', class: on ? 'fg' : ''}, fInt(x.res) + '/' + fInt(x.due)));
+    if (x.due && (fullVal || shortVal)) { const t = fullVal ? fInt(x.res) + '/' + fInt(x.due) : fInt(x.due); svg.appendChild(s('text', edgeAnchor({x: X + bw / 2, y: H - bot - hD - 3, class: on ? 'fg' : ''}, svg, W, t), t)); }
     const hit = s('rect', {x: X, y: 0, width: bw, height: H, fill: 'transparent'});
     hover(hit, tt, dayLabel(x.d) + ' Nov', x.due ? fInt(x.due) + ' due · ' + fInt(x.res) + ' resolved (' + fPct(x.res / x.due, 0) + ') · ' + fInt(x.sla) + ' within SLA' : 'No cases due');
     svg.appendChild(hit);
-    svg.appendChild(s('text', {x: X + bw / 2, y: H - 4, 'text-anchor': 'middle'}, dayLabel(x.d)));
+    if (i % every === 0) svg.appendChild(s('text', edgeAnchor({x: X + bw / 2, y: H - 4}, svg, W, dayTxt(x.d)), dayTxt(x.d)));
   });
+  if (!fullVal) card.insertBefore(el('div', 'cap', shortVal ? 'Numbers above the bars are cases due. Tap a bar for resolved.' : 'Tap a bar to see cases due and resolved.'), ch);
+}
+// centre a label on x, but keep it inside the chart at the edges
+function edgeAnchor(a, svg, W, txt) {
+  const half = textW(svg, [txt]) / 2;
+  if (a.x - half < 0) return Object.assign(a, {x: 0, 'text-anchor': 'start'});
+  if (a.x + half > W) return Object.assign(a, {x: W, 'text-anchor': 'end'});
+  return Object.assign(a, {'text-anchor': 'middle'});
 }
 
 // deposits by current stage, new vs spillover
@@ -797,15 +899,15 @@ function renderStages(w) {
   const nT = items.reduce((a, d) => a + d.nw, 0), sT = items.reduce((a, d) => a + d.sp, 0);
   $('wStageNote').textContent = fInt(nT) + ' new deposits' + (filtered(w) ? ' paid on the selected days' : '') + ' and ' + fInt(sT) + ' spillovers, by where they are in the pipeline today.' + (selected.has('Lusaka') ? ' Lusaka spillovers have no stage breakdown.' : '');
   if (!items.length) { box.appendChild(el('div', 'empty', 'No deposits for the selected regions.')); return; }
-  const step = 28, bh = 16, H = items.length * step;
-  const [svg, W] = svgIn(box, H);
-  const lw = Math.min(W * 0.42, textW(svg, items.map(d => d.label)) + 12);
+  const [svg, W] = svgIn(box, 10);
+  const {stack, lw} = labelMode(svg, W, items.map(d => d.label), 0.42);
+  const bh = 16, step = stack ? 42 : 28; setH(svg, W, items.length * step);
   const vw = textW(svg, items.map(d => fInt(d.nw + d.sp))) + 10;
   const max = Math.max(...items.map(d => d.nw + d.sp)), x = v => (W - vw - lw) * v / max;
   const tt = tooltip(box);
   items.forEach((d, i) => {
-    const y = i * step + 5;
-    svg.appendChild(s('text', {x: 0, y: y + 12, class: 'fg'}, d.label));
+    const y = i * step + (stack ? 19 : 5);
+    svg.appendChild(s('text', {x: 0, y: stack ? y - 5 : y + 12, class: 'fg'}, d.label));
     svg.appendChild(s('rect', {x: lw, y, width: W - vw - lw, height: bh, rx: 4, fill: 'var(--track)'}));
     if (d.nw) { const r1 = s('rect', {x: lw, y, width: Math.max(2, x(d.nw)), height: bh, rx: 3, fill: 'var(--accent2)'}); hover(r1, tt, d.label, 'New deposits ' + fInt(d.nw) + ' · Spillovers ' + fInt(d.sp)); svg.appendChild(r1); }
     if (d.sp) { const r2 = s('rect', {x: lw + x(d.nw), y, width: Math.max(2, x(d.sp)), height: bh, rx: 3, fill: 'var(--accent)'}); hover(r2, tt, d.label, 'New deposits ' + fInt(d.nw) + ' · Spillovers ' + fInt(d.sp)); svg.appendChild(r2); }
@@ -938,20 +1040,30 @@ function tooltip(box) {
 }
 const textW = (svg, strs) => { let m = 0; strs.forEach(t => { const n = s('text', {}, t); svg.appendChild(n); m = Math.max(m, n.getComputedTextLength()); n.remove(); }); return m; };
 const svgIn = (box, H) => { const W = box.clientWidth || 360; const svg = s('svg', {viewBox: `0 0 ${W} ${H}`, width: W, height: H}); box.appendChild(svg); return [svg, W]; };
-const hover = (node, tt, title, line) => { node.addEventListener('mousemove', e => tt.show(e, title, line)); node.addEventListener('mouseleave', () => tt.hide()); };
+const setH = (svg, W, H) => { svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H); };
+// labels sit beside the bars when they fit in `frac` of the width, otherwise on their own line above the bars
+const labelMode = (svg, W, labels, frac) => { const need = textW(svg, labels) + 12; return need > W * frac ? {stack: true, lw: 0} : {stack: false, lw: need}; };
+// tooltips: hover with a mouse, tap on touch screens (tap elsewhere to close)
+let openTT = null;
+const hover = (node, tt, title, line) => {
+  node.addEventListener('mousemove', e => { if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return; tt.show(e, title, line); });
+  node.addEventListener('mouseleave', () => tt.hide());
+  node.addEventListener('click', e => { e.stopPropagation(); if (openTT && openTT !== tt) openTT.hide(); tt.show(e, title, line); openTT = tt; });
+};
+document.addEventListener('click', () => { if (openTT) { openTT.hide(); openTT = null; } });
 
 function hbars(box, items, {max, highlightFirst, valueFmt, tip, target}) {
   box.replaceChildren();
   if (!items.length) { box.appendChild(el('div', 'empty', 'Nothing to show for the selected regions.')); return; }
-  const step = 28, bh = 16, H = items.length * step;
-  const [svg, W] = svgIn(box, H);
-  const lw = Math.min(W * 0.45, textW(svg, items.map(d => d.label)) + 12);
+  const [svg, W] = svgIn(box, 10);
+  const {stack, lw} = labelMode(svg, W, items.map(d => d.label), 0.45);
+  const bh = 16, step = stack ? 42 : 28; setH(svg, W, items.length * step);
   const vw = textW(svg, items.map(valueFmt)) + 10;
   const x = v => lw + (W - vw - lw) * (v / max);
   const tt = tooltip(box);
   items.forEach((d, i) => {
-    const y = i * step + 5;
-    svg.appendChild(s('text', {x: 0, y: y + 12, class: 'fg'}, d.label));
+    const y = i * step + (stack ? 19 : 5);
+    svg.appendChild(s('text', {x: 0, y: stack ? y - 5 : y + 12, class: 'fg'}, d.label));
     svg.appendChild(s('rect', {x: lw, y, width: x(max) - lw, height: bh, rx: 4, fill: 'var(--track)'}));
     const muted = highlightFirst && i > 0;
     const b = s('rect', {x: lw, y, width: Math.max(1, x(d.value) - lw), height: bh, rx: 4, fill: muted ? 'var(--muted)' : 'var(--accent)', opacity: muted ? .4 : 1});
@@ -963,19 +1075,20 @@ function hbars(box, items, {max, highlightFirst, valueFmt, tip, target}) {
 
 function pairs(box, items, {note, la = 'September', lb = 'October'}) {
   box.replaceChildren();
-  const bh = 11, block = 44, H = items.length * block;
-  const [svg, W] = svgIn(box, H);
-  const lw = Math.min(W * 0.4, textW(svg, items.flatMap(d => [d.label, note ? note(d) : ''])) + 12);
+  const bh = 11;
+  const [svg, W] = svgIn(box, 10);
+  const {stack, lw} = labelMode(svg, W, items.flatMap(d => [d.label, note ? note(d) : '']), 0.4);
+  const block = stack ? 52 : 44; setH(svg, W, items.length * block);
   const max = Math.max(1, ...items.flatMap(d => [Math.abs(d.sep), Math.abs(d.oct)]));
   const vw = textW(svg, items.flatMap(d => [fInt(d.sep), fInt(d.oct)])) + 10;
   const x = v => lw + (W - vw - lw) * (v / max);
   const tt = tooltip(box);
   items.forEach((d, i) => {
     const y0 = i * block + 4;
-    svg.appendChild(s('text', {x: 0, y: y0 + 11, class: 'fg'}, d.label));
-    if (note) svg.appendChild(s('text', {x: 0, y: y0 + 27}, note(d)));
+    svg.appendChild(s('text', {x: 0, y: y0 + 11, class: 'fg'}, stack && note ? d.label + ' · ' + note(d) : d.label));
+    if (note && !stack) svg.appendChild(s('text', {x: 0, y: y0 + 27}, note(d)));
     [[d.sep, 'var(--brand-soft)'], [d.oct, 'var(--accent)']].forEach(([v, col], j) => {
-      const y = y0 + j * (bh + 3);
+      const y = y0 + (stack ? 16 : 0) + j * (bh + 3);
       const b = s('rect', {x: lw, y, width: Math.max(1, x(v) - lw), height: bh, rx: 3, fill: col});
       hover(b, tt, d.label, la + ' ' + fInt(d.sep) + ' · ' + lb + ' ' + fInt(d.oct));
       svg.appendChild(b);
@@ -988,18 +1101,19 @@ function pairs(box, items, {note, la = 'September', lb = 'October'}) {
 function duo(box, items) {
   box.replaceChildren();
   if (!items.length) { box.appendChild(el('div', 'empty', 'No cases for the selected regions.')); return; }
-  const bh = 11, block = 46, H = items.length * block;
-  const [svg, W] = svgIn(box, H);
-  const lw = Math.min(W * 0.4, textW(svg, items.flatMap(d => [d.label, fInt(d.n) + ' cases'])) + 12);
+  const bh = 11;
+  const [svg, W] = svgIn(box, 10);
+  const {stack, lw} = labelMode(svg, W, items.flatMap(d => [d.label, fInt(d.n) + ' cases']), 0.4);
+  const block = stack ? 54 : 46; setH(svg, W, items.length * block);
   const vw = textW(svg, ['100.0%']) + 8;
   const x = v => lw + (W - vw - lw) * v;
   const tt = tooltip(box);
   items.forEach((d, i) => {
     const y0 = i * block + 4;
-    svg.appendChild(s('text', {x: 0, y: y0 + 11, class: 'fg'}, d.label));
-    svg.appendChild(s('text', {x: 0, y: y0 + 27}, fInt(d.n) + ' cases'));
+    svg.appendChild(s('text', {x: 0, y: y0 + 11, class: 'fg'}, stack ? d.label + ' · ' + fInt(d.n) + ' cases' : d.label));
+    if (!stack) svg.appendChild(s('text', {x: 0, y: y0 + 27}, fInt(d.n) + ' cases'));
     [[d.a, 'var(--accent)'], [d.b, 'var(--accent2)']].forEach(([v, col], j) => {
-      const y = y0 + j * (bh + 3);
+      const y = y0 + (stack ? 16 : 0) + j * (bh + 3);
       svg.appendChild(s('rect', {x: lw, y, width: x(1) - lw, height: bh, rx: 3, fill: 'var(--track)'}));
       const b = s('rect', {x: lw, y, width: Math.max(0, x(v) - lw), height: bh, rx: 3, fill: col});
       hover(b, tt, d.label + ' · ' + fInt(d.n) + ' cases', 'Resolved ' + fPct(d.a) + ' · Within SLA ' + fPct(d.b));
@@ -1344,7 +1458,7 @@ function renderDayChips(w, weekly) {
   }
   pop.querySelectorAll('input').forEach(cb => { cb.checked = cb.value === 'all' ? !days : !!(days && days.has(cb.value)); });
   const n = days ? days.size : 0;
-  $('dateLbl').textContent = !days ? 'All days (' + effPeriod(w).replace(/, \d{4}$/, '') + ')' : n === 1 ? dayLabel([...days][0]) + ' Nov' : n + ' days';
+  $('dateLbl').textContent = !days ? (matchMedia('(max-width: 640px)').matches ? 'All days' : 'All days (' + effPeriod(w).replace(/, \d{4}$/, '') + ')') : n === 1 ? dayLabel([...days][0]) + ' Nov' : n + ' days';
   $('periodText').textContent = days ? [...days].sort().map(d => dayLabel(d) + ' Nov').join(', ') : effPeriod(w);
 }
 $('dateBtn').addEventListener('click', e => { e.stopPropagation(); if (locked()) return; const p = $('datePop'); p.hidden = !p.hidden; $('dateBtn').setAttribute('aria-expanded', String(!p.hidden)); });
